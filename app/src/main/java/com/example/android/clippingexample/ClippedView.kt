@@ -150,9 +150,9 @@ class ClippedView @JvmOverloads constructor(
 		canvas.save()
 		canvas.translate(columnTwo, rowTwo)
 		canvas.clipRect(
-			clipRectLeft, clipRectTop,
-			clipRectRight - smallRectOffset,
-			clipRectBottom - smallRectOffset
+			clipRectLeft, clipRectTop, // 0dp, 0dp
+			clipRectRight - smallRectOffset, // 90dp, 40dp
+			clipRectBottom - smallRectOffset // 90dp, 40dp
 		)
 		// The method clipRect(float, float, float, float, Region.Op
 		// .INTERSECT) was deprecated in API level 26. The recommended
@@ -169,7 +169,7 @@ class ClippedView @JvmOverloads constructor(
 			canvas.clipRect(
 				clipRectLeft + smallRectOffset,
 				clipRectTop + smallRectOffset,
-				clipRectRight,clipRectBottom
+				clipRectRight, clipRectBottom
 			)
 		}
 		drawClippedRectangle(canvas)
@@ -177,7 +177,25 @@ class ClippedView @JvmOverloads constructor(
 	}
 
 	private fun drawCombinedClippingExample(canvas: Canvas) {
+		canvas.save()
+		canvas.translate(columnOne, rowThree)
+		path.rewind()
+		path.addCircle(
+			clipRectLeft + rectInset + circleRadius,
+			clipRectTop + circleRadius + rectInset,
+			circleRadius,Path.Direction.CCW
+		)
+		path.addRect(
+			clipRectRight / 2 - circleRadius,
+			clipRectTop + circleRadius + rectInset,
+			clipRectRight / 2 + circleRadius,
+			clipRectBottom - rectInset, Path.Direction.CCW
+		)
+		canvas.clipPath(path)
+		drawClippedRectangle(canvas)
+		canvas.restore()
 	}
+
 	private fun drawRoundedRectangleClippingExample(canvas: Canvas) {
 	}
 	private fun drawOutsideClippingExample(canvas: Canvas) {
